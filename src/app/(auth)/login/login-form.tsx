@@ -18,7 +18,10 @@ export function LoginForm() {
     setError(null);
 
     const supabase = createClient();
-    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
     if (signInError) {
       setError(signInError.message);
@@ -26,7 +29,32 @@ export function LoginForm() {
       return;
     }
 
-    router.push(searchParams.get('redirect') ?? '/');
+    const redirectParam = searchParams.get('redirect');
+    if (redirectParam) {
+      router.push(redirectParam);
+      router.refresh();
+      return;
+    }
+
+    // No explicit redirect target — look up the account's role and send it
+    // straight to the right portal. Falling back to '/portal' would also
+    // work (middleware bounces a role mismatch to the correct home), but
+    // this avoids the extra redirect hop.
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', signInData.user.id)
+      .single();
+
+    const roleHome: Record<string, string> = {
+      patient: '/portal',
+      provider: '/provider',
+      staff: '/provider',
+      student: '/student',
+      admin: '/admin',
+    };
+
+    router.push(roleHome[profile?.role ?? 'patient'] ?? '/portal');
     router.refresh();
   }
 
