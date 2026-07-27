@@ -15,8 +15,10 @@ export function EnrollButton({ courseId }: { courseId: string }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ courseId }),
       });
-      const body = await res.json();
-      if (!res.ok) throw new Error(body.error ?? 'Unable to start checkout.');
+      const body = await res.json().catch(() => null);
+      if (!res.ok || !body) {
+        throw new Error(body?.error ?? `Unable to start checkout (server returned ${res.status}).`);
+      }
       window.location.href = body.url;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong.');

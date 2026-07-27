@@ -80,7 +80,17 @@ export async function POST(request: NextRequest) {
   }
 
   const netAmountCents = Math.max(course.price_cents - discountAmountCents, 0);
-  const stripe = getStripe();
+
+  let stripe;
+  try {
+    stripe = getStripe();
+  } catch (err) {
+    console.error('Stripe not configured:', err);
+    return NextResponse.json(
+      { error: 'Payments are not set up yet. Add Stripe API keys to the environment and redeploy.' },
+      { status: 503 }
+    );
+  }
 
   const { data: payment, error: paymentError } = await supabase
     .from('payments')
@@ -102,36 +112,42 @@ export async function POST(request: NextRequest) {
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? request.nextUrl.origin;
 
-  const session = await stripe.checkout.sessions.create({
-    mode: paymentPlan === 'installments' ? 'subscription' : 'payment',
-    customer_email: user.email ?? undefined,
-    line_items: [
-      {
-        price_data: {
-          currency: course.currency,
-          unit_amount:
-            paymentPlan === 'installments'
-              ? Math.ceil(netAmountCents / (installmentCount ?? 3))
-              : netAmountCents,
-          product_data: { name: course.title },
-          ...(paymentPlan === 'installments' ? { recurring: { interval: 'month' as const } } : {}),
+  try {
+    const session = await stripe.checkout.sessions.create({
+      mode: paymentPlan === 'installments' ? 'subscription' : 'payment',
+      customer_email: user.email ?? undefined,
+      line_items: [
+        {
+          price_data: {
+            currency: course.currency,
+            unit_amount:
+              paymentPlan === 'installments'
+                ? Math.ceil(netAmountCents / (installmentCount ?? 3))
+                : netAmountCents,
+            product_data: { name: course.title },
+            ...(paymentPlan === 'installments' ? { recurring: { interval: 'month' as const } } : {}),
+          },
+          quantity: 1,
         },
-        quantity: 1,
+      ],
+      ...(stripeCouponId ? { discounts: [{ coupon: stripeCouponId }] } : {}),
+      success_url: `${siteUrl}/student?checkout=success`,
+      cancel_url: `${siteUrl}/courses/${course.slug}?checkout=cancelled`,
+      metadata: {
+        paymentId: payment.id,
+        courseId,
+        userId: user.id,
+        promoCodeId: promoCodeId ?? '',
+        installmentCount: paymentPlan === 'installments' ? String(installmentCount ?? 3) : '',
       },
-    ],
-    ...(stripeCouponId ? { discounts: [{ coupon: stripeCouponId }] } : {}),
-    success_url: `${siteUrl}/student?checkout=success`,
-    cancel_url: `${siteUrl}/courses/${course.slug}?checkout=cancelled`,
-    metadata: {
-      paymentId: payment.id,
-      courseId,
-      userId: user.id,
-      promoCodeId: promoCodeId ?? '',
-      installmentCount: paymentPlan === 'installments' ? String(installmentCount ?? 3) : '',
-    },
-  });
+    });
 
-  await supabase.from('payments').update({ stripe_checkout_session_id: session.id }).eq('id', payment.id);
+    await supabase.from('payments').update({ stripe_checkout_session_id: session.id }).eq('id', payment.id);
 
-  return NextResponse.json({ url: session.url });
+    return NextResponse.json({ url: session.url });
+  } catch (err) {
+    console.error('Stripe checkout session creation failed:', err);
+    await supabase.from('payments').update({ status: 'failed' }).eq('id', payment.id);
+    return NextResponse.json({ error: 'Unable to start checkout with Stripe.' }, { status: 502 });
+  }
 }
