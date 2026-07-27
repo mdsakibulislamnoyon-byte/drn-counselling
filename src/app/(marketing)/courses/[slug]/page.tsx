@@ -46,6 +46,14 @@ export default async function CourseDetailPage({ params }: PageProps) {
     <div className="mx-auto max-w-5xl px-6 py-16">
       <div className="grid gap-10 md:grid-cols-3">
         <div className="md:col-span-2">
+          {course.thumbnail_url && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={course.thumbnail_url}
+              alt=""
+              className="mb-6 aspect-video w-full rounded-2xl object-cover"
+            />
+          )}
           <h1 className="font-serif text-4xl text-ink-900">{course.title}</h1>
           <p className="mt-3 text-lg text-ink-700">{course.subtitle}</p>
           <div className="prose prose-ink mt-8 whitespace-pre-wrap text-ink-700">

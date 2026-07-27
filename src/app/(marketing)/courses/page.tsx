@@ -40,7 +40,12 @@ export default async function CourseCatalogPage() {
               href={`/courses/${course.slug}`}
               className="card flex flex-col transition-shadow hover:shadow-md"
             >
-              <div className="aspect-video rounded-xl bg-brand-100" />
+              {course.thumbnail_url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={course.thumbnail_url} alt="" className="aspect-video w-full rounded-xl object-cover" />
+              ) : (
+                <div className="aspect-video rounded-xl bg-brand-100" />
+              )}
               <h3 className="mt-4 font-serif text-lg text-ink-900">{course.title}</h3>
               <p className="mt-2 flex-1 text-sm text-ink-700">{course.subtitle}</p>
               <p className="mt-4 text-lg font-semibold text-brand-700">

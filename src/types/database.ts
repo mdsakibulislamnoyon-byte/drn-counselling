@@ -138,10 +138,20 @@ export interface Lesson {
   title: string;
   position: number;
   content_md: string | null;
+  video_url: string | null;
   mux_asset_id: string | null;
   mux_playback_id: string | null;
   duration_seconds: number | null;
   is_preview: boolean;
+}
+
+export interface LessonResource {
+  id: string;
+  lesson_id: string;
+  title: string;
+  url: string;
+  position: number;
+  created_at: string;
 }
 
 export interface Enrollment {

@@ -6,6 +6,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/provider/schedule', label: 'Schedule' },
   { href: '/provider/patients', label: 'Patients' },
   { href: '/provider/messages', label: 'Messages' },
+  { href: '/provider/courses', label: 'Courses' },
 ];
 
 export default async function ProviderLayout({ children }: { children: React.ReactNode }) {

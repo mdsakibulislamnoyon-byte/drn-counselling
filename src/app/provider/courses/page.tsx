@@ -1,14 +1,27 @@
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { requireRole } from '@/lib/auth';
+import { hasPermission } from '@/lib/permissions';
 import type { Course } from '@/types/database';
 import { CreateCourseForm } from './create-course-form';
 import { PublishToggle } from './publish-toggle';
 
-export default async function AdminCoursesPage() {
-  await requireRole(['admin']);
-  const supabase = await createClient();
+export default async function ProviderCoursesPage() {
+  await requireRole(['provider', 'staff', 'admin']);
 
+  if (!(await hasPermission('lms.manage_courses'))) {
+    return (
+      <div>
+        <h1 className="font-serif text-3xl text-ink-900">Courses</h1>
+        <p className="mt-4 text-sm text-ink-700">
+          You don&apos;t have permission to manage courses. An admin can grant this from{' '}
+          <span className="font-medium">Users &amp; roles</span> in the Super Admin dashboard.
+        </p>
+      </div>
+    );
+  }
+
+  const supabase = await createClient();
   const { data: courses } = await supabase
     .from('courses')
     .select('*')
@@ -28,7 +41,7 @@ export default async function AdminCoursesPage() {
                 <p className="text-xs text-ink-700">/{c.slug} · ${(c.price_cents / 100).toFixed(2)}</p>
               </div>
               <div className="flex gap-2">
-                <Link href={`/admin/courses/${c.id}`} className="btn-ghost">
+                <Link href={`/provider/courses/${c.id}`} className="btn-ghost">
                   Edit content
                 </Link>
                 <PublishToggle courseId={c.id} isPublished={c.is_published} />

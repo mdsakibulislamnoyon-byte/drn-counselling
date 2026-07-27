@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/server';
 import { requireRole } from '@/lib/auth';
 import { LessonVideo } from '@/components/student/lesson-video';
 import { MarkCompleteButton } from '@/components/student/mark-complete-button';
-import type { Course, CourseModule, Lesson, LessonProgress } from '@/types/database';
+import type { Course, CourseModule, Lesson, LessonProgress, LessonResource } from '@/types/database';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -35,10 +35,10 @@ export default async function StudentCoursePlayerPage({ params, searchParams }: 
 
   const { data: modules } = await supabase
     .from('course_modules')
-    .select('*, lessons(*)')
+    .select('*, lessons(*, lesson_resources(*))')
     .eq('course_id', course.id)
     .order('position')
-    .returns<(CourseModule & { lessons: Lesson[] })[]>();
+    .returns<(CourseModule & { lessons: (Lesson & { lesson_resources: LessonResource[] })[] })[]>();
 
   const { data: progressRows } = await supabase
     .from('lesson_progress')
@@ -109,7 +109,7 @@ export default async function StudentCoursePlayerPage({ params, searchParams }: 
           </div>
         ) : (
           <div className="space-y-4">
-            {activeLesson.mux_playback_id && <LessonVideo playbackId={activeLesson.mux_playback_id} />}
+            <LessonVideo videoUrl={activeLesson.video_url} playbackId={activeLesson.mux_playback_id} />
             <div className="flex items-center justify-between">
               <h2 className="font-serif text-2xl text-ink-900">{activeLesson.title}</h2>
               <MarkCompleteButton lessonId={activeLesson.id} completed={activeProgress?.status === 'completed'} />
@@ -117,6 +117,22 @@ export default async function StudentCoursePlayerPage({ params, searchParams }: 
             {activeLesson.content_md && (
               <div className="prose prose-ink whitespace-pre-wrap text-sm text-ink-700">
                 {activeLesson.content_md}
+              </div>
+            )}
+            {activeLesson.lesson_resources && activeLesson.lesson_resources.length > 0 && (
+              <div className="card">
+                <p className="text-sm font-semibold text-ink-900">Resources</p>
+                <ul className="mt-2 space-y-1">
+                  {activeLesson.lesson_resources
+                    .sort((a, b) => a.position - b.position)
+                    .map((r) => (
+                      <li key={r.id}>
+                        <a href={r.url} target="_blank" rel="noreferrer" className="text-sm text-brand-700 underline">
+                          {r.title}
+                        </a>
+                      </li>
+                    ))}
+                </ul>
               </div>
             )}
           </div>
