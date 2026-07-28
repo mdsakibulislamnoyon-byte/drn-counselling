@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { OAuthButtons } from '@/components/auth/oauth-buttons';
 
 export function RegisterForm() {
   const router = useRouter();
@@ -97,6 +98,8 @@ export function RegisterForm() {
       <button type="submit" disabled={loading} className="btn-primary w-full py-3">
         {loading ? 'Creating account…' : 'Continue to HIPAA consent'}
       </button>
+
+      <OAuthButtons accountType={accountType} />
 
       <p className="text-center text-sm text-ink-700">
         Already have an account?{' '}

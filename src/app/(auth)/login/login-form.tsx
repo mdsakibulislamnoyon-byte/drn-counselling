@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { OAuthButtons } from '@/components/auth/oauth-buttons';
 
 export function LoginForm() {
   const router = useRouter();
@@ -10,7 +11,9 @@ export function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(
+    searchParams.get('error') === 'oauth_failed' ? 'Sign-in with that provider failed. Please try again.' : null
+  );
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -88,6 +91,8 @@ export function LoginForm() {
       <button type="submit" disabled={loading} className="btn-primary w-full py-3">
         {loading ? 'Logging in…' : 'Log in'}
       </button>
+
+      <OAuthButtons />
 
       <p className="text-center text-sm text-ink-700">
         Don&apos;t have an account?{' '}
