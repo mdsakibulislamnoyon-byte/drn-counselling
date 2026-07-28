@@ -22,24 +22,34 @@ export function HipaaConsentForm({
     setLoading(true);
     setError(null);
 
-    const res = await fetch('/api/consent', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        documentIds: documents.map((d) => d.id),
-        signatureFullName,
-      }),
-    });
+    try {
+      const res = await fetch('/api/consent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          documentIds: documents.map((d) => d.id),
+          signatureFullName,
+        }),
+      });
 
-    if (!res.ok) {
-      const body = await res.json().catch(() => ({}));
-      setError(body.error ?? 'Unable to record your consent. Please try again.');
+      const body = await res.json().catch(() => null);
+
+      if (!res.ok || !body?.success) {
+        setError(body?.error ?? `Unable to record your consent (server returned ${res.status}). Please try again.`);
+        setLoading(false);
+        return;
+      }
+
+      router.push(redirectTo);
+      router.refresh();
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? `Network error: ${err.message}. Please check your connection and try again.`
+          : 'Something went wrong. Please try again.'
+      );
       setLoading(false);
-      return;
     }
-
-    router.push(redirectTo);
-    router.refresh();
   }
 
   return (
