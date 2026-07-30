@@ -92,6 +92,7 @@ export interface Appointment {
   telehealth_link: string | null;
   location: string | null;
   patient_notes: string | null;
+  provider_notes_encrypted: string | null;
   cancelled_by: string | null;
   cancellation_reason: string | null;
   created_at: string;
@@ -231,6 +232,14 @@ export interface Message {
   sender_id: string;
   body_encrypted: string; // decrypted to plain string app-side before use
   attachment_url: string | null;
+  created_at: string;
+}
+
+export interface WellnessCheckin {
+  id: string;
+  patient_id: string;
+  mood_rating: number;
+  reflection_encrypted: string | null; // decrypted to plain string app-side before use
   created_at: string;
 }
 

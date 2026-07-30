@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { requireRole } from '@/lib/auth';
 import { AppointmentActions } from './appointment-actions';
 import { StatusPill } from '@/components/dashboard/status-pill';
+import { SessionNoteButton } from '@/components/provider/session-note-button';
 
 export default async function ProviderSchedulePage() {
   const profile = await requireRole(['provider', 'staff', 'admin']);
@@ -34,7 +35,12 @@ export default async function ProviderSchedulePage() {
                 </p>
                 <div className="mt-1"><StatusPill status={appt.status} /></div>
               </div>
-              <AppointmentActions appointmentId={appt.id} status={appt.status} />
+              <div className="flex flex-wrap items-center gap-2">
+                <AppointmentActions appointmentId={appt.id} status={appt.status} />
+                {(appt.status === 'confirmed' || appt.status === 'completed') && (
+                  <SessionNoteButton appointmentId={appt.id} hasNote={!!appt.provider_notes_encrypted} />
+                )}
+              </div>
             </div>
           ))
         )}
