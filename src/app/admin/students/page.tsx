@@ -1,6 +1,7 @@
 import { format } from 'date-fns';
 import { createClient } from '@/lib/supabase/server';
 import { requireRole } from '@/lib/auth';
+import { StatusPill } from '@/components/dashboard/status-pill';
 
 export default async function AdminStudentsPage() {
   await requireRole(['admin']);
@@ -38,7 +39,7 @@ export default async function AdminStudentsPage() {
                   <td className="px-4 py-3 text-ink-700">{course?.title}</td>
                   <td className="px-4 py-3 text-ink-700">{format(new Date(e.enrolled_at), 'MMM d, yyyy')}</td>
                   <td className="px-4 py-3">
-                    <span className="badge bg-ink-100 capitalize text-ink-700">{e.status}</span>
+                    <StatusPill status={e.status} />
                   </td>
                 </tr>
               );

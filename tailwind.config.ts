@@ -23,11 +23,31 @@ const config: Config = {
           700: '#3a4148',
           800: '#282e33',
           900: '#181c1f',
+          deep: '#082e33',
+        },
+        paper: {
+          DEFAULT: '#f9f8f3',
+          deep: '#f0eee5',
+        },
+        cream: '#faf4e8',
+        mint: {
+          DEFAULT: '#b9dfd4',
+          deep: '#529d93',
+        },
+        coral: {
+          DEFAULT: '#f3a28f',
+          deep: '#bd6758',
+        },
+        accent: {
+          blue: '#a9c7db',
+          'blue-deep': '#5589a9',
+          yellow: '#f2d783',
         },
       },
       fontFamily: {
-        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-dm-sans)', 'system-ui', 'sans-serif'],
         serif: ['var(--font-fraunces)', 'Georgia', 'serif'],
+        mono: ['var(--font-dm-mono)', 'ui-monospace', 'monospace'],
       },
       borderRadius: {
         xl: '1rem',

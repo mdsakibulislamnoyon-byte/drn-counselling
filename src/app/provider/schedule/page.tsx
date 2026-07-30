@@ -2,6 +2,7 @@ import { format } from 'date-fns';
 import { createClient } from '@/lib/supabase/server';
 import { requireRole } from '@/lib/auth';
 import { AppointmentActions } from './appointment-actions';
+import { StatusPill } from '@/components/dashboard/status-pill';
 
 export default async function ProviderSchedulePage() {
   const profile = await requireRole(['provider', 'staff', 'admin']);
@@ -31,7 +32,7 @@ export default async function ProviderSchedulePage() {
                   {format(new Date(appt.start_time), 'EEE, MMM d · h:mm a')} ·{' '}
                   <span className="capitalize">{appt.type.replace('_', ' ')}</span>
                 </p>
-                <span className="badge mt-1 bg-ink-100 capitalize text-ink-700">{appt.status}</span>
+                <div className="mt-1"><StatusPill status={appt.status} /></div>
               </div>
               <AppointmentActions appointmentId={appt.id} status={appt.status} />
             </div>

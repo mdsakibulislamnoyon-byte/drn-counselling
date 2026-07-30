@@ -1,44 +1,42 @@
 import Link from 'next/link';
 import { SignOutButton } from '@/components/dashboard/sign-out-button';
+import { DashboardNav, type NavItem } from '@/components/dashboard/dashboard-nav';
 import type { Profile } from '@/types/database';
 
-export interface NavItem {
-  href: string;
-  label: string;
-}
+export type { NavItem };
+
+const ACCENT_BADGE: Record<string, string> = {
+  brand: 'bg-mint text-brand-900',
+  blue: 'bg-accent-blue text-accent-blue-deep',
+  coral: 'bg-coral text-coral-deep',
+  yellow: 'bg-accent-yellow text-amber-900',
+};
 
 export function DashboardShell({
   profile,
   navItems,
   portalLabel,
+  accent = 'brand',
   children,
 }: {
   profile: Profile;
   navItems: NavItem[];
   portalLabel: string;
+  accent?: keyof typeof ACCENT_BADGE;
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen bg-ink-50">
+    <div className="flex min-h-screen bg-paper-deep">
       <aside className="hidden w-64 shrink-0 flex-col border-r border-ink-100 bg-white p-6 md:flex">
-        <Link href="/" className="font-serif text-lg text-ink-900">
-          {profile.full_name}
+        <Link href="/" className="flex items-center gap-2.5">
+          <span className={`icon-badge h-9 w-9 rounded-lg font-serif text-sm ${ACCENT_BADGE[accent]}`}>
+            DN
+          </span>
+          <span className="font-serif text-base leading-tight text-ink-900">{profile.full_name}</span>
         </Link>
-        <p className="mt-1 text-xs font-medium uppercase tracking-wide text-brand-600">
-          {portalLabel}
-        </p>
+        <p className="eyebrow mt-3">{portalLabel}</p>
 
-        <nav className="mt-8 flex-1 space-y-1">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="block rounded-lg px-3 py-2 text-sm font-medium text-ink-700 hover:bg-ink-50 hover:text-ink-900"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+        <DashboardNav navItems={navItems} />
 
         <div className="border-t border-ink-100 pt-4">
           <p className="text-xs capitalize text-ink-700">Signed in as {profile.role}</p>

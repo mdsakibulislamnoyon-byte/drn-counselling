@@ -3,14 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { requireRole } from '@/lib/auth';
 import type { Appointment, Profile } from '@/types/database';
 import { RequestAppointmentForm } from './request-appointment-form';
-
-const STATUS_STYLES: Record<string, string> = {
-  requested: 'bg-amber-50 text-amber-700',
-  confirmed: 'bg-brand-50 text-brand-700',
-  completed: 'bg-ink-100 text-ink-700',
-  cancelled: 'bg-red-50 text-red-700',
-  no_show: 'bg-red-50 text-red-700',
-};
+import { StatusPill } from '@/components/dashboard/status-pill';
 
 export default async function PatientAppointmentsPage() {
   const profile = await requireRole(['patient']);
@@ -45,9 +38,7 @@ export default async function PatientAppointmentsPage() {
                     {appt.type.replace('_', ' ')} · {appt.is_telehealth ? 'Telehealth' : 'In person'}
                   </p>
                 </div>
-                <span className={`badge capitalize ${STATUS_STYLES[appt.status]}`}>
-                  {appt.status.replace('_', ' ')}
-                </span>
+                <StatusPill status={appt.status} />
               </div>
             ))
           )}

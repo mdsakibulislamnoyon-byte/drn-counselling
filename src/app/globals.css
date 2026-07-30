@@ -39,6 +39,15 @@
   .badge {
     @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
   }
+  .eyebrow {
+    @apply font-mono text-[0.68rem] font-medium uppercase tracking-[0.14em] text-brand-600;
+  }
+  .icon-badge {
+    @apply flex h-11 w-11 shrink-0 items-center justify-center rounded-xl;
+  }
+  .stat-card {
+    @apply card flex items-start gap-4;
+  }
 }
 
 @layer utilities {
