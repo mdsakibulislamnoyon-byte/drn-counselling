@@ -1,6 +1,6 @@
 # Architecture
 
-Web application and Learning Management System for Dominik Nicotera's mental health
+Web application and Learning Management System for Dominick Nicotera's mental health
 counseling practice: a public marketing site, a HIPAA-gated patient portal, a provider/staff
 dashboard, a drip-content LMS for clinician trainees, and a super admin control panel — one
 Next.js codebase, one Postgres database, role-based access enforced at the database layer.

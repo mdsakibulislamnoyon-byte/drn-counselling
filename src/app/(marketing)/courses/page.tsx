@@ -21,7 +21,7 @@ export default async function CourseCatalogPage() {
       <p className="mt-4 max-w-2xl text-ink-700">
         Professional development courses for newly graduated mental health clinicians. Content
         unlocks week-by-week after enrollment, and every course includes a year of post-completion
-        mentorship messaging with Dominik.
+        mentorship messaging with Dominick.
       </p>
 
       {!courses || courses.length === 0 ? (

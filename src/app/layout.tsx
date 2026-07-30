@@ -7,11 +7,11 @@ const fraunces = Fraunces({ subsets: ['latin'], variable: '--font-fraunces', wei
 
 export const metadata: Metadata = {
   title: {
-    default: 'Dominik Nicotera Counselling',
-    template: '%s | Dominik Nicotera Counselling',
+    default: 'DRN Counseling and Consulting, LCSW, PLLC',
+    template: '%s | DRN Counseling & Consulting',
   },
   description:
-    'Mental health counseling practice and professional training academy led by Dominik Nicotera.',
+    "Dominick R. Nicotera, LCSW-R, provides individual, family, and group therapy in Utica, NY — plus a professional training academy for newly graduated mental health clinicians.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

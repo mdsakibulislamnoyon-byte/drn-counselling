@@ -99,7 +99,7 @@ export default async function CourseDetailPage({ params }: PageProps) {
           <EnrollButton courseId={course.id} />
           <p className="mt-4 text-xs text-ink-700">
             Includes {course.mentorship_months} months of post-course mentorship messaging with
-            Dominik.
+            Dominick.
           </p>
         </aside>
       </div>

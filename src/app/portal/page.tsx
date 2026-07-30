@@ -55,7 +55,7 @@ export default async function PatientDashboardPage() {
         <div className="card">
           <h2 className="font-serif text-lg text-ink-900">Messages</h2>
           <p className="mt-2 text-sm text-ink-700">
-            Send a secure, encrypted message to Dominik or your care team.
+            Send a secure, encrypted message to Dominick or your care team.
           </p>
           <Link href="/portal/messages" className="btn-primary mt-4 w-full">
             Open messages

@@ -44,7 +44,7 @@ create table certificates (
   certificate_number text not null unique,
   issued_at timestamptz not null default now(),
   pdf_url text,
-  -- Mentorship messaging with Dominik is available until this date
+  -- Mentorship messaging with Dominick is available until this date
   -- (courses.mentorship_months after issuance).
   mentorship_expires_at timestamptz not null
 );

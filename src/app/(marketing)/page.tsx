@@ -1,75 +1,139 @@
 import Link from 'next/link';
+import { GradientOrbs } from '@/components/motion/gradient-orbs';
+import { FadeIn, StaggerGroup, StaggerItem } from '@/components/motion/fade-in';
+import { ProviderMonogram } from '@/components/marketing/provider-monogram';
+import { IconPhone, IconMapPin, IconClock } from '@/components/marketing/service-icons';
+import { SERVICES } from '@/lib/content/services';
+import { PRACTICE } from '@/lib/content/practice';
 
 export default function HomePage() {
   return (
     <div>
-      <section className="mx-auto max-w-6xl px-6 py-20 md:py-28">
-        <div className="grid gap-12 md:grid-cols-2 md:items-center">
-          <div>
-            <span className="badge bg-brand-50 text-brand-700">Now accepting new patients</span>
-            <h1 className="mt-5 font-serif text-4xl leading-tight text-ink-900 md:text-5xl">
-              Compassionate counseling, and a training ground for the next generation of
-              clinicians.
-            </h1>
-            <p className="mt-5 text-lg text-ink-700">
-              Dominik Nicotera provides individual and family therapy alongside a professional
-              training academy that helps newly graduated mental health clinicians build a
-              confident, ethical practice.
+      <section className="relative overflow-hidden">
+        <GradientOrbs variant="hero" />
+        <div className="bg-mesh absolute inset-0 -z-10" />
+        <div className="mx-auto max-w-6xl px-6 py-20 md:py-32">
+          <div className="grid gap-12 md:grid-cols-2 md:items-center">
+            <FadeIn>
+              <span className="badge bg-brand-50 text-brand-700 ring-1 ring-inset ring-brand-100">
+                Now accepting new patients in Central New York
+              </span>
+              <h1 className="mt-5 font-serif text-4xl leading-tight text-ink-900 md:text-5xl">
+                Compassionate counseling, built around{' '}
+                <span className="text-gradient">your goals for change.</span>
+              </h1>
+              <p className="mt-5 text-lg text-ink-700">
+                {PRACTICE.providerName}, {PRACTICE.credentials}, leads {PRACTICE.legalName} — offering
+                individual, family, and group therapy across Central New York, alongside a professional
+                training academy for newly graduated mental health clinicians.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-4">
+                <Link href="/register" className="btn-primary px-6 py-3 text-base">
+                  Book a consultation
+                </Link>
+                <Link href="/services" className="btn-secondary px-6 py-3 text-base">
+                  Explore services
+                </Link>
+              </div>
+              <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-ink-700">
+                <a href={PRACTICE.phoneHref} className="flex items-center gap-1.5 hover:text-brand-700">
+                  <IconPhone className="h-4 w-4 text-brand-600" /> {PRACTICE.phone}
+                </a>
+                <span className="flex items-center gap-1.5">
+                  <IconMapPin className="h-4 w-4 text-brand-600" /> Utica, NY
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <IconClock className="h-4 w-4 text-brand-600" /> {PRACTICE.hours.availability}
+                </span>
+              </div>
+            </FadeIn>
+
+            <FadeIn direction="left" delay={0.15}>
+              <div className="relative rounded-2xl bg-brand-900 p-8 text-brand-50 shadow-xl">
+                <div className="flex items-center gap-4">
+                  <ProviderMonogram className="h-16 w-16 shrink-0" />
+                  <div>
+                    <p className="font-serif text-lg text-white">{PRACTICE.providerName}</p>
+                    <p className="text-sm text-brand-200">{PRACTICE.credentialLabel}</p>
+                  </div>
+                </div>
+                <p className="mt-6 font-serif text-xl leading-relaxed">
+                  &ldquo;The importance of motivation and goals for change is paramount to the success of the
+                  client.&rdquo;
+                </p>
+                <Link href="/about" className="mt-6 inline-block text-sm font-medium text-brand-100 underline">
+                  Read Dominick&apos;s approach →
+                </Link>
+              </div>
+            </FadeIn>
+          </div>
+        </div>
+      </section>
+
+      <section className="relative border-y border-ink-100 bg-ink-50 py-20">
+        <div className="mx-auto max-w-6xl px-6">
+          <FadeIn className="mx-auto max-w-2xl text-center">
+            <h2 className="font-serif text-3xl text-ink-900">Services built around real needs</h2>
+            <p className="mt-3 text-ink-700">
+              From one-on-one sessions to specialized programs for veterans and substance dependence, every
+              service is delivered with the same welcoming, open-minded approach.
             </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Link href="/register" className="btn-primary px-6 py-3 text-base">
-                Book a consultation
-              </Link>
-              <Link href="/courses" className="btn-secondary px-6 py-3 text-base">
-                Explore the academy
-              </Link>
-            </div>
-          </div>
-          <div className="card bg-brand-900 text-brand-50">
-            <p className="font-serif text-xl">&ldquo;Growth happens in the space between where you
-              are and where you&apos;re going — my job is to walk that space with you.&rdquo;</p>
-            <p className="mt-6 text-sm text-brand-100">— Dominik Nicotera, LPC</p>
-          </div>
-        </div>
-      </section>
+          </FadeIn>
 
-      <section className="border-y border-ink-100 bg-ink-50 py-16">
-        <div className="mx-auto grid max-w-6xl gap-8 px-6 md:grid-cols-3">
-          {[
-            {
-              title: 'Individual & Family Therapy',
-              body: 'Secure telehealth or in-person sessions with flexible scheduling and encrypted messaging between visits.',
-              href: '/services',
-            },
-            {
-              title: 'Clinician Training Academy',
-              body: 'Self-paced, drip-scheduled video courses with quizzes, certificates, and a year of post-course mentorship.',
-              href: '/courses',
-            },
-            {
-              title: 'HIPAA-First by Design',
-              body: 'Every account starts with a digital HIPAA acknowledgment and privacy consent, signed and timestamped for compliance.',
-              href: '/faq',
-            },
-          ].map((f) => (
-            <Link href={f.href} key={f.title} className="card transition-shadow hover:shadow-md">
-              <h3 className="font-serif text-lg text-ink-900">{f.title}</h3>
-              <p className="mt-2 text-sm text-ink-700">{f.body}</p>
+          <StaggerGroup className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {SERVICES.slice(0, 4).map((service) => (
+              <StaggerItem key={service.slug}>
+                <Link href="/services" className="card card-hover group block h-full">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-50 text-brand-700 transition-colors group-hover:bg-brand-600 group-hover:text-white">
+                    <service.icon className="h-6 w-6" />
+                  </div>
+                  <h3 className="mt-4 font-serif text-lg text-ink-900">{service.title}</h3>
+                  <p className="mt-2 line-clamp-3 text-sm text-ink-700">{service.description}</p>
+                </Link>
+              </StaggerItem>
+            ))}
+          </StaggerGroup>
+
+          <FadeIn className="mt-10 text-center" delay={0.1}>
+            <Link href="/services" className="btn-secondary">
+              View all services
             </Link>
-          ))}
+          </FadeIn>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-20 text-center">
-        <h2 className="font-serif text-3xl text-ink-900">Ready to take the next step?</h2>
-        <p className="mx-auto mt-3 max-w-xl text-ink-700">
-          Create a secure account to schedule a session, or enroll in a course to start your
-          professional development today.
-        </p>
-        <div className="mt-8 flex justify-center gap-4">
-          <Link href="/register" className="btn-primary px-6 py-3 text-base">
-            Create your account
-          </Link>
+      <section className="relative overflow-hidden py-20">
+        <GradientOrbs variant="section" />
+        <div className="mx-auto max-w-4xl px-6 text-center">
+          <FadeIn>
+            <h2 className="font-serif text-3xl text-ink-900">Clinician Training Academy</h2>
+            <p className="mx-auto mt-3 max-w-xl text-ink-700">
+              Self-paced, drip-scheduled video courses built for newly graduated mental health clinicians —
+              complete with quizzes, certificates, and a year of post-course mentorship.
+            </p>
+            <Link href="/courses" className="btn-primary mt-8 inline-flex px-6 py-3 text-base">
+              Browse the academy
+            </Link>
+          </FadeIn>
+        </div>
+      </section>
+
+      <section className="border-t border-ink-100 bg-ink-50 py-20">
+        <div className="mx-auto max-w-6xl px-6 text-center">
+          <FadeIn>
+            <h2 className="font-serif text-3xl text-ink-900">Ready to take the next step?</h2>
+            <p className="mx-auto mt-3 max-w-xl text-ink-700">
+              Create a secure account to schedule a session, or reach out directly — {PRACTICE.phoneNote.toLowerCase()}.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
+              <Link href="/register" className="btn-primary px-6 py-3 text-base">
+                Create your account
+              </Link>
+              <a href={PRACTICE.phoneHref} className="btn-secondary px-6 py-3 text-base">
+                Call {PRACTICE.phone}
+              </a>
+            </div>
+          </FadeIn>
         </div>
       </section>
     </div>

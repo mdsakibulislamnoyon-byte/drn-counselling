@@ -8,7 +8,7 @@ const FAQS = [
     a: 'Yes. Every new account must digitally sign our HIPAA Acknowledgment and Privacy Consent form during registration. Your signature, name, and timestamp are stored securely for compliance and shown to you again any time from your profile.',
   },
   {
-    q: 'How are my messages with Dominik protected?',
+    q: 'How are my messages with Dominick protected?',
     a: 'Messages are encrypted before they are stored and can only be read by participants in the conversation — you, and the provider or staff member you are messaging.',
   },
   {
@@ -17,7 +17,7 @@ const FAQS = [
   },
   {
     q: 'What happens after I finish a course?',
-    a: 'Once every module is complete, a Certificate of Completion is generated automatically, and you get one year of included messaging support with Dominik.',
+    a: 'Once every module is complete, a Certificate of Completion is generated automatically, and you get one year of included messaging support with Dominick.',
   },
   {
     q: 'Can I pay for a course in installments?',

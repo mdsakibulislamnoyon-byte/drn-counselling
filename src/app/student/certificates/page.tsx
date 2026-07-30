@@ -33,7 +33,7 @@ export default async function StudentCertificatesPage() {
                     <p className="mt-2 text-sm text-ink-700">Certificate #{cert.certificate_number}</p>
                     <p className="text-xs text-ink-700">Issued {format(new Date(cert.issued_at), 'MMM d, yyyy')}</p>
                     <p className="mt-2 text-xs text-brand-700">
-                      Mentorship support with Dominik through{' '}
+                      Mentorship support with Dominick through{' '}
                       {format(new Date(cert.mentorship_expires_at), 'MMM d, yyyy')}
                     </p>
                     <a href={cert.pdf_url ?? '#'} className="btn-secondary mt-4 w-full">

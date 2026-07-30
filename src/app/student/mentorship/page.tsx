@@ -24,7 +24,7 @@ export default async function StudentMentorshipPage() {
     <div>
       <h1 className="font-serif text-3xl text-ink-900">Mentorship</h1>
       <p className="mt-1 text-ink-700">
-        Message Dominik directly during your included post-course mentorship window.
+        Message Dominick directly during your included post-course mentorship window.
       </p>
 
       {(!hasActiveCertificate || hasActiveCertificate.length === 0) && (

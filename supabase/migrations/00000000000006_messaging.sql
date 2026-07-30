@@ -7,7 +7,7 @@
 create table conversations (
   id uuid primary key default gen_random_uuid(),
   subject text,
-  -- 'clinical' = patient <-> provider/staff; 'mentorship' = student <-> Dominik
+  -- 'clinical' = patient <-> provider/staff; 'mentorship' = student <-> Dominick
   -- during the 1-year post-course support window.
   context text not null default 'clinical' check (context in ('clinical', 'mentorship')),
   related_enrollment_id uuid, -- fk added in migration 008 after enrollments exists

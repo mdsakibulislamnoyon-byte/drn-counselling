@@ -1,4 +1,4 @@
-# Dominik Nicotera Counselling
+# Dominick Nicotera Counselling
 
 A custom-coded web application and Learning Management System for a mental health counseling
 practice: a public marketing site, a HIPAA-gated patient portal, a provider/staff dashboard, a
