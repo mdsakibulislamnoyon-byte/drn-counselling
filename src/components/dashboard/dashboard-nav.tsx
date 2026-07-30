@@ -2,12 +2,15 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import type { ComponentType, SVGProps } from 'react';
+import type { ReactNode } from 'react';
 
 export interface NavItem {
   href: string;
   label: string;
-  icon?: ComponentType<SVGProps<SVGSVGElement>>;
+  // A rendered element, not a component reference — Server Components
+  // (the layout.tsx files that build this array) can't pass function
+  // values across the boundary into this Client Component.
+  icon?: ReactNode;
 }
 
 export function DashboardNav({ navItems }: { navItems: NavItem[] }) {
@@ -25,7 +28,7 @@ export function DashboardNav({ navItems }: { navItems: NavItem[] }) {
               isCurrent ? 'bg-mint/35 text-brand-800' : 'text-ink-700 hover:bg-ink-50 hover:text-ink-900'
             }`}
           >
-            {item.icon && <item.icon className="h-4 w-4 shrink-0" />}
+            {item.icon}
             {item.label}
           </Link>
         );
