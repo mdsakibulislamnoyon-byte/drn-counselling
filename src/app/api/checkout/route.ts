@@ -113,34 +113,40 @@ export async function POST(request: NextRequest) {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? request.nextUrl.origin;
 
   try {
-    const session = await stripe.checkout.sessions.create({
-      mode: paymentPlan === 'installments' ? 'subscription' : 'payment',
-      customer_email: user.email ?? undefined,
-      line_items: [
-        {
-          price_data: {
-            currency: course.currency,
-            unit_amount:
-              paymentPlan === 'installments'
-                ? Math.ceil(netAmountCents / (installmentCount ?? 3))
-                : netAmountCents,
-            product_data: { name: course.title },
-            ...(paymentPlan === 'installments' ? { recurring: { interval: 'month' as const } } : {}),
+    const session = await stripe.checkout.sessions.create(
+      {
+        mode: paymentPlan === 'installments' ? 'subscription' : 'payment',
+        customer_email: user.email ?? undefined,
+        line_items: [
+          {
+            price_data: {
+              currency: course.currency,
+              unit_amount:
+                paymentPlan === 'installments'
+                  ? Math.ceil(netAmountCents / (installmentCount ?? 3))
+                  : netAmountCents,
+              product_data: { name: course.title },
+              ...(paymentPlan === 'installments' ? { recurring: { interval: 'month' as const } } : {}),
+            },
+            quantity: 1,
           },
-          quantity: 1,
+        ],
+        ...(stripeCouponId ? { discounts: [{ coupon: stripeCouponId }] } : {}),
+        success_url: `${siteUrl}/student?checkout=success`,
+        cancel_url: `${siteUrl}/courses/${course.slug}?checkout=cancelled`,
+        metadata: {
+          paymentId: payment.id,
+          courseId,
+          userId: user.id,
+          promoCodeId: promoCodeId ?? '',
+          installmentCount: paymentPlan === 'installments' ? String(installmentCount ?? 3) : '',
         },
-      ],
-      ...(stripeCouponId ? { discounts: [{ coupon: stripeCouponId }] } : {}),
-      success_url: `${siteUrl}/student?checkout=success`,
-      cancel_url: `${siteUrl}/courses/${course.slug}?checkout=cancelled`,
-      metadata: {
-        paymentId: payment.id,
-        courseId,
-        userId: user.id,
-        promoCodeId: promoCodeId ?? '',
-        installmentCount: paymentPlan === 'installments' ? String(installmentCount ?? 3) : '',
       },
-    });
+      // Reuses the same Checkout Session on a retried request (network
+      // retry, double-click past the client's disabled state) instead of
+      // creating a second one for the same pending payment row.
+      { idempotencyKey: `checkout_${payment.id}` }
+    );
 
     await supabase.from('payments').update({ stripe_checkout_session_id: session.id }).eq('id', payment.id);
 

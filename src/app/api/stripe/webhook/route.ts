@@ -11,7 +11,14 @@ import { logAudit } from '@/lib/audit';
  * not a specific RLS-scoped user.
  */
 export async function POST(request: NextRequest) {
-  const stripe = getStripe();
+  let stripe;
+  try {
+    stripe = getStripe();
+  } catch (err) {
+    console.error('Stripe not configured:', err);
+    return NextResponse.json({ error: 'Stripe is not configured.' }, { status: 503 });
+  }
+
   const signature = request.headers.get('stripe-signature');
   const rawBody = await request.text();
 
@@ -29,6 +36,16 @@ export async function POST(request: NextRequest) {
       const session = event.data.object as Stripe.Checkout.Session;
       const { paymentId, courseId, userId, promoCodeId, installmentCount } = session.metadata ?? {};
       if (!paymentId || !courseId || !userId) break;
+
+      // Stripe redelivers webhooks it didn't get a 200 for — since the
+      // enrollment insert below isn't itself retry-safe (unique student_id +
+      // course_id), skip straight to "already handled" on a redelivery.
+      const { data: existingPayment } = await supabase
+        .from('payments')
+        .select('status')
+        .eq('id', paymentId)
+        .maybeSingle();
+      if (existingPayment?.status === 'succeeded') break;
 
       await supabase
         .from('payments')
